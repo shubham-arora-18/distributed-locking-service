@@ -37,7 +37,7 @@ dev = [
 ]
 
 [project.urls]
-Home = "https://bitbucket.org/airterra-code/distributed-locking/"
+Home = "https://github.com/shubham-arora-18/distributed-locking-service"
 
 [tool.isort]
 profile = "black"
