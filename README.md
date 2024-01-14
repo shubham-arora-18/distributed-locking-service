@@ -1,7 +1,7 @@
 # Distributed Locking Service
 Distributed locking service is an intuitive REST based backend service, that enables synchronization of all the distributed processes in your network via simple HTTP calls. 
 Different processes can attain shared read and shared write locks. Every process acquires a lock with a certain timeout. 
-After the timeout, the process automatically releases the lock with the relevant subsequent state transition for the lock. 
+After the timeout, the process automatically releases the lock and adjusts the state of the lock accordingly. 
 This service has been implemented with Python and Fastapi. GCP's Datastore is used as the backend to store the state of the locks.
 
 
