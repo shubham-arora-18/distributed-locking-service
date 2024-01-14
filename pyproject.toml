@@ -1,0 +1,43 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "distributed_locking_service"
+authors = [{name = "Shubham Arora", email = "shubham.arora.player@gmail.com"}]
+readme = "README.md"
+dynamic = ["version", "description"]
+dependencies = [
+    "fastapi==0.100.0",
+    "uvicorn==0.16.0",
+    "google-cloud-datastore==2.16.1",
+    "ddtrace==1.15.1",
+    "python-json-logger==2.0.2",
+    "fastapi_versioning==0.10.0",
+    "fifolock==0.0.20",
+    "deepdiff==6.4.1",
+    "python-shared-utils==1.0.39"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==6.2.5",
+    "pytest-cov==3.0.0",
+    "types-cachetools==5.3.0.6",
+    "httpx==0.24.1",
+    "mypy==0.910",
+    "flake8==3.9.2",
+    "black==22.3.0",
+    "isort==5.12.0",
+    "autoflake==1.4",
+    "flake8-docstrings==1.6.0",
+]
+dev = [
+    "pre-commit==2.9.2",
+]
+
+[project.urls]
+Home = "https://bitbucket.org/airterra-code/distributed-locking/"
+
+[tool.isort]
+profile = "black"
