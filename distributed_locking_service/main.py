@@ -66,10 +66,8 @@ for sub_app in app.routes:
             sub_app.app.add_exception_handler(ex, func)  # type: ignore
 
 
-# import uvicorn
-#
-# os.environ["DATASTORE_EMULATOR_HOST"] = "localhost:8081"
-# os.environ["CLOUDSDK_CORE_PROJECT"] = "test"
-# # os.environ["GOOGLE_CLOUD_PROJECT"] = "qp-sandbox-inventory-4f59"
-# # os.environ["GOOGLE_CLOUD_PROJECT"] = "at-invopt-lle-lle1-ae8c"
-# uvicorn.run(app, host="0.0.0.0", port=9090)
+import uvicorn
+
+os.environ["DATASTORE_EMULATOR_HOST"] = "localhost:8081"
+os.environ["CLOUDSDK_CORE_PROJECT"] = "test"
+uvicorn.run(app, host="0.0.0.0", port=8080)
