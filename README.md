@@ -12,8 +12,8 @@ This service has been implemented with Python and Fastapi. GCP's Datastore is us
 4. **PUT /v1/distributed_lock/{lock_id}/write-process/{process_id}/write(timeout_seconds)**:Adds the process to a certain lock as a writer in a list of writers.This further has 2 use cases:
    1. If the write lock is write exclusive, meaning only one process can acquire the write lock at a time.
    2. If the write lock supports shared writes, meaning meaning multiple processes can acquire the lock to write. Note: This relies on the dev’s discretion to use this only when the underlying processes are modifying separate resources and there is no chance for a race condition on any underlying resources.
-5. **DELETE /v1/distributed_lock/read-process/{lock_id}/{process_id}/read**: Deletes the read process from the lock and manages the state of the lock accordingly.
-6. **DELETE /v1/distributed_lock/{lock_id}/write-process/write**: Deletes the write process from the lock and manages the state of the lock accordingly.
+5. **DELETE /v1/distributed_lock/{lock_id}/read-process/{process_id}**: Deletes the read process from the lock and manages the state of the lock accordingly.
+6. **DELETE /v1/distributed_lock/{lock_id}/write-process/{process_id}**: Deletes the write process from the lock and manages the state of the lock accordingly.
 
 To test these apis out, you can simply deploy the service with steps below and access the api docs at [http://localhost:8000/docs](http://localhost:8000/docs)
 
