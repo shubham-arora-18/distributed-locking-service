@@ -1,6 +1,3 @@
-"""
-Utility Module for checking auth header
-"""
 import json
 import logging
 import time
@@ -23,10 +20,6 @@ DEFAULT_CLIENT_ID = ""
 
 
 class JWTBearer(HTTPBearer):
-    """
-    Utility class for checking auth header
-
-    """
 
     invalid_auth_scheme_message = "Invalid authentication scheme."
     invalid_or_expired_token_message = "Invalid token or expired token."
@@ -50,11 +43,6 @@ class JWTBearer(HTTPBearer):
 
     @staticmethod
     def verify_jwt(jwtoken: str):
-        """
-        function to check valid token
-        :param jwtoken:
-        :return:
-        """
         is_token_valid: bool = False
 
         try:
@@ -99,14 +87,17 @@ def fetch_tenant_id_from_jwt_payload(
     else:
         if request.state.jwt_payload.get(PARTNER_ACCESS) is None:
             # raise Exception("Tenant Id not present in jwt payload")
-            client_id = DEFAULT_CLIENT_ID  # returning default client id if not present for backwards compatibility
+            client_id = DEFAULT_CLIENT_ID  # returning default
+            # client id if not present for backwards compatibility
             logger.info("Returning default tenant id")
         else:
             if request.headers.get(CLIENT_ID) is None:
-                raise AuthException(f"Please add the x-partner-id header.", 401)
+                raise AuthException("Please add the x-partner-id header.", 401)
             client_access_requested = request.headers.get(CLIENT_ID)
             client_access_granted = request.state.jwt_payload.get(PARTNER_ACCESS)
-            client_id = get_client_id(client_access_requested, client_access_granted)  # type: ignore
+            client_id = get_client_id(
+                client_access_requested, client_access_granted  # type: ignore
+            )
 
         logger.info(f"Client id = {client_id}")
         return client_id

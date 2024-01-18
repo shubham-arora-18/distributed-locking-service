@@ -1,6 +1,3 @@
-"""
-Module for authentication handling
-"""
 import logging
 import time
 from typing import Optional
@@ -16,11 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def token_response(token: str):
-    """
-    function to return token
-    :param token:
-    :return:
-    """
     return {"access_token": token}
 
 
@@ -32,11 +24,6 @@ def token_response(token: str):
 
 
 def decode_jwt(token: str) -> Optional[dict]:
-    """
-    function to decode jwt token
-    :param token:
-    :return:
-    """
     try:
         # decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         decoded_token = jwt.decode(token, options={"verify_signature": False})

@@ -1,7 +1,6 @@
 import logging
 import os
 
-from auth.custom_exceptions import CustomException
 from fastapi import FastAPI
 from fastapi import exceptions
 from fastapi import status
@@ -11,6 +10,7 @@ from fastapi_versioning import VersionedFastAPI
 from distributed_locking_service import __project_id__
 from distributed_locking_service import __version__
 from distributed_locking_service.custom_logging import configure_logging
+from distributed_locking_service.exceptions import CustomException
 from distributed_locking_service.routers import distributed_lock
 from distributed_locking_service.routers import health
 

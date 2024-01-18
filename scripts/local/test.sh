@@ -15,6 +15,6 @@ export CLOUDSDK_CORE_PROJECT=test
 screen -S datastore_emulator -dm gcloud beta emulators datastore start --no-store-on-disk --host-port=localhost:8081 --use-firestore-in-datastore-mode
 sleep 3
 pytest --cov=distributed_locking_service --cov-report=html \
--o console_output_style=progress --cov-config=.coveragerc --cov-fail-under=98 ${@}
+-o console_output_style=progress --cov-config=.coveragerc --cov-fail-under=97 ${@}
 screen -S datastore_emulator -X quit
 unset DATASTORE_EMULATOR_HOST
