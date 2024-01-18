@@ -20,7 +20,6 @@ It should look like this:
 
 ![APIs Screenshot 1](https://github.com/shubham-arora-18/distributed-locking-service/blob/main/api_screenshot1.png?raw=true)
 ![APIs Screenshot 2](https://github.com/shubham-arora-18/distributed-locking-service/blob/main/api_screenshot2.png?raw=true)
-![APIs Screenshot 3](https://github.com/shubham-arora-18/distributed-locking-service/blob/main/api_screenshot3.png?raw=true)
 ## How to setup!
 
 ### 1. Setting up isolated virtual env for this project
