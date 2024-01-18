@@ -1,9 +1,8 @@
 from typing import Any
 
-from invopt.common_exceptions import InternalServerException
-from invopt.common_exceptions import MissingDataException
-
 from distributed_locking_service.daos.base import InvoptBaseDAO
+from distributed_locking_service.exceptions import InternalServerException
+from distributed_locking_service.exceptions import MissingDataException
 from distributed_locking_service.models.distributed_lock import DistributedLockModel
 
 

@@ -3,6 +3,7 @@ Module for authentication handling
 """
 import logging
 import time
+from typing import Optional
 
 import jwt
 
@@ -30,7 +31,7 @@ def token_response(token: str):
 #     return token_response(token)
 
 
-def decode_jwt(token: str) -> dict:
+def decode_jwt(token: str) -> Optional[dict]:
     """
     function to decode jwt token
     :param token:

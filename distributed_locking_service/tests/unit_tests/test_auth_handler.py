@@ -26,7 +26,7 @@ def test_decode_jwt_invalid_jwt():
     # with pytest.raises(ValueError)
 
 
-def test_decode_jwt_invalid_jwt():
+def test_decode_jwt_invalid_jwt_2():
     expired_token = (
         "eyJ0eXAiOiIiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoia3Jpc2huYSIsImV4cCI6NDEwMjM1ODQwMH0"
         ".R0a86OeLQlju-Ju6t2zlGiqmAybNLWIbpAJTN_9A8n8"

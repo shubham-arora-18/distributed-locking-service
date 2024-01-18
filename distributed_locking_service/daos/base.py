@@ -1,5 +1,6 @@
 import logging
 from typing import Generic
+from typing import Optional
 from typing import Type
 from typing import TypeVar
 
@@ -44,7 +45,10 @@ class InvoptBaseDAO(Generic[model_T]):
         return await self.create(updated_entity)
 
     async def get_query(
-        self, filters: list[tuple], limit: int = None, order_property: str = None
+        self,
+        filters: list[tuple],
+        limit: Optional[int] = None,
+        order_property: Optional[str] = None,
     ) -> list[model_T]:
         db_client = await TenantDatastoreClient.get_datastore_client(self.tenant_id)
         query = db_client.query(kind=self.__kind__)

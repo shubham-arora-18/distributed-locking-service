@@ -36,7 +36,7 @@ class JWTBearer(HTTPBearer):
         super().__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super().__call__(request)
+        credentials: HTTPAuthorizationCredentials = await super().__call__(request)  # type: ignore
         if credentials:
             if not credentials.scheme == "Bearer":
                 raise AuthException(status_code=401, detail=self.invalid_auth_scheme_message)
@@ -106,7 +106,7 @@ def fetch_tenant_id_from_jwt_payload(
                 raise AuthException(f"Please add the x-partner-id header.", 401)
             client_access_requested = request.headers.get(CLIENT_ID)
             client_access_granted = request.state.jwt_payload.get(PARTNER_ACCESS)
-            client_id = get_client_id(client_access_requested, client_access_granted)
+            client_id = get_client_id(client_access_requested, client_access_granted)  # type: ignore
 
         logger.info(f"Client id = {client_id}")
         return client_id
