@@ -1,7 +1,5 @@
-import sys
-
-sys.path.append("../../auth")
 import asyncio
+import sys
 
 import fastapi
 import pytest
@@ -16,6 +14,7 @@ from distributed_locking_service.auth.auth_bearer import (
 from distributed_locking_service.auth.auth_bearer import get_client_id
 from distributed_locking_service.exceptions import AuthException
 
+sys.path.append("../../auth")
 jwt_b = JWTBearer()
 
 url = "https://test.org/get"
