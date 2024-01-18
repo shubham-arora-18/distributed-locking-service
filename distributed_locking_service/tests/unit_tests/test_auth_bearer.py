@@ -6,12 +6,15 @@ import asyncio
 import fastapi
 import pytest
 import requests
-from auth.auth_bearer import JWTBearer
-from auth.auth_bearer import create_jwt_token
-from auth.auth_bearer import fetch_tenant_id_from_jwt_payload
-from auth.auth_bearer import get_client_id
-from auth.custom_exceptions import AuthException
 from starlette.datastructures import Headers
+
+from distributed_locking_service.auth.auth_bearer import JWTBearer
+from distributed_locking_service.auth.auth_bearer import create_jwt_token
+from distributed_locking_service.auth.auth_bearer import (
+    fetch_tenant_id_from_jwt_payload,
+)
+from distributed_locking_service.auth.auth_bearer import get_client_id
+from distributed_locking_service.exceptions import AuthException
 
 jwt_b = JWTBearer()
 
@@ -65,8 +68,8 @@ def test_no_jwt_provided():
 
 @pytest.fixture
 def sample_fastapi_request():
-    jwt_token = create_jwt_token("AMERICANEAGLE")
-    valid_headers = {"Authorization": "Bearer " + jwt_token, "x-partner-id": "AMERICANEAGLE"}
+    jwt_token = create_jwt_token("ABC")
+    valid_headers = {"Authorization": "Bearer " + jwt_token, "x-partner-id": "ABC"}
     req = fastapi.Request(
         {
             "type": "http",
@@ -78,7 +81,7 @@ def sample_fastapi_request():
 
 
 def test_jwt_payload_extration_successful(sample_fastapi_request):
-    assert fetch_tenant_id_from_jwt_payload(sample_fastapi_request) == ""
+    assert fetch_tenant_id_from_jwt_payload(sample_fastapi_request) == "ABC"
 
 
 def test_for_universal_access_get_client_id_returns_clientid():

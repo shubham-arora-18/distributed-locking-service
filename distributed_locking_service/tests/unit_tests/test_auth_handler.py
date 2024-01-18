@@ -1,7 +1,4 @@
-import logging
-
-from auth.auth_handler import decode_jwt
-from auth.auth_handler import set_log_level
+from distributed_locking_service.auth.auth_handler import decode_jwt
 
 jwt_token = (
     "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoia3Jpc2huYSIsImV4cCI6MTY3Mzg1ODEzNX0"
@@ -36,8 +33,3 @@ def test_decode_jwt_invalid_jwt():
     )
 
     assert not decode_jwt(expired_token) is None
-
-
-def test_log_level():
-    set_log_level(logging.ERROR)
-    assert logging.getLogger("auth.auth_handler").level == logging.ERROR
