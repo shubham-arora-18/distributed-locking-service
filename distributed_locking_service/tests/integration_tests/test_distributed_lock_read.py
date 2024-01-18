@@ -184,6 +184,7 @@ def test_valid_add_and_get_timed_out_lock(mock_process, add_read_process):
 
     response = client.get(f"/v1/distributed_lock/{rand_lock_id}", headers=valid_headers)
 
+    assert response.status_code == 200
     assert "READ" == response.json()["current_state"]
     assert len(response.json()["read_process_list"]) == 1
     assert not any(
@@ -192,12 +193,12 @@ def test_valid_add_and_get_timed_out_lock(mock_process, add_read_process):
 
 
 @mock.patch("distributed_locking_service.services.distributed_lock.Process")
-def test_invalid_add_and_get_timed_out_lock(mock_process, add_read_process):
+def test_valid_add_and_get_lock(mock_process, add_read_process):
     rand_process_id = get_random_process_id()
     past_time = datetime.now(timezone.utc) - timedelta(seconds=10)
     # the process below is a live process with 90 secs remaining to live(100-10)
-    expired_process = Process(process_id="test_process_id", lock_acquired_at=past_time, timeout=100)
-    mock_process.return_value = expired_process
+    live_process = Process(process_id="test_process_id", lock_acquired_at=past_time, timeout=100)
+    mock_process.return_value = live_process
     rand_lock_id = add_read_process["lock_id"]
 
     client.put(
@@ -208,6 +209,7 @@ def test_invalid_add_and_get_timed_out_lock(mock_process, add_read_process):
 
     response = client.get(f"/v1/distributed_lock/{rand_lock_id}", headers=valid_headers)
 
+    assert response.status_code == 200
     assert "READ" == response.json()["current_state"]
     assert len(response.json()["read_process_list"]) == 2
     assert any(

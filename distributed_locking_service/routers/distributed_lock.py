@@ -1,13 +1,15 @@
 import logging
 
-from auth.auth_bearer import JWTBearer
-from auth.auth_bearer import fetch_tenant_id_from_jwt_payload
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import Path
 from fastapi import Query
 from fastapi import Request
 
+from distributed_locking_service.auth.auth_bearer import JWTBearer
+from distributed_locking_service.auth.auth_bearer import (
+    fetch_tenant_id_from_jwt_payload,
+)
 from distributed_locking_service.models.distributed_lock import DistributedLockModel
 from distributed_locking_service.services.distributed_lock import DistributedLockService
 

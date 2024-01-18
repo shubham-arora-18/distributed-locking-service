@@ -4,8 +4,8 @@ from typing import Type
 from typing import TypeVar
 
 from google.cloud import datastore
-from invopt.common_exceptions import MissingDataException
 
+from distributed_locking_service.exceptions import MissingDataException
 from distributed_locking_service.models.base import InvoptBaseModel
 from distributed_locking_service.tenant_datastore_client import TenantDatastoreClient
 

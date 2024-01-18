@@ -49,6 +49,8 @@ Thumbs.db
 *.wmv
 .venv
 
+**/.py*/**
+
 #Coverage files
 .coverage
 .coverage.*

@@ -16,7 +16,7 @@ dependencies = [
     "fastapi_versioning==0.10.0",
     "fifolock==0.0.20",
     "deepdiff==6.4.1",
-    "python-shared-utils==1.0.39"
+    "PyJWT==2.6.0"
 ]
 
 [project.optional-dependencies]
