@@ -66,14 +66,14 @@ This project uses `flit` to manage our project's dependencies.
 We run this code locally using the uvicorn server.
 
   ```sh
-  ./scripts/local/run_service.sh
+  ./scripts/local/run_service_locally.sh
   ```
 
 ### 4. Accessing Apis Documentation
 
 After the service is successfully running. Open up this url on an internet browser:
 
-[http://localhost:8000/docs](http://localhost:8000/docs)
+[http://localhost:8000/v1/docs](http://localhost:8000/docs)
 
 ## How to Format code!
 If you have setup the project as instructed above, your code should get auto-formatted before you commit. Still you can use the script below to manually format the code as well.
