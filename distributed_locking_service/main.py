@@ -17,7 +17,7 @@ from distributed_locking_service.routers import health
 os.environ["TZ"] = "UTC"
 configure_logging()
 
-app = FastAPI(title=f"Model Registry Service: {__project_id__}", version=__version__)
+app = FastAPI(title=f"Distributed Locking Service: {__project_id__}", version=__version__)
 
 logger = logging.getLogger(__name__)
 
