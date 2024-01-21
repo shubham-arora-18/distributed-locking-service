@@ -1,0 +1,40 @@
+# Use the official lightweight Python image.
+# https://hub.docker.com/_/python
+FROM python:3.10-slim
+
+# Allow statements and log messages to immediately appear in the Knative logs
+ENV PYTHONUNBUFFERED True
+
+# workdir as /app
+WORKDIR /app
+
+RUN mkdir build
+
+# Not sure if follwing is needed or not.
+COPY scripts/shared/install_packages.sh ./build/.
+RUN ./build/install_packages.sh
+
+# Create new user which will be used for all activities.
+RUN groupadd --gid 2000 appgroup && useradd --home-dir /home/appuser --create-home --uid 2000 --gid 2000 --shell /bin/bash --skel /dev/null appuser
+RUN chown -R appuser:appgroup /app
+RUN chmod 755 /app
+RUN chmod 755 /app/build
+
+USER appuser
+SHELL ["bash", "-c"]
+
+# Create virtual environment
+ENV VIRTUAL_ENV=/home/appuser/venv
+RUN python -m venv $VIRTUAL_ENV
+
+# Installing dependencies
+COPY pyproject.toml ./
+COPY README.md ./
+RUN mkdir distributed_locking_service
+COPY distributed_locking_service/__init__.py  distributed_locking_service/.
+RUN mkdir scripts
+COPY scripts/shared/install_dependencies.sh ./scripts
+RUN source $VIRTUAL_ENV/bin/activate && ./scripts/install_dependencies.sh
+
+
+#command to build this docker image:  docker build -f Dockerfile-base  -t [image_name]:[tag]
