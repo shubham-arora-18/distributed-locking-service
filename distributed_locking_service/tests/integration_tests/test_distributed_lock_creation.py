@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from distributed_locking_service.main import app
+from distributed_locking_service.tests.constants import valid_headers
 
 client = TestClient(app)
 
@@ -11,15 +12,6 @@ client = TestClient(app)
 #
 # os.environ["CLOUDSDK_CORE_PROJECT"] = "test"
 # os.environ["DATASTORE_EMULATOR_HOST"] = "localhost:8081"
-
-valid_headers = {
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiL"
-    "CJJc3N1ZWQgQXQiOiIyMDI1LTAzLTEwVDA5OjMyOjAyLjkxNFoiLCJleHBpcmVzIjoxNz"
-    "M2NDY5MTIyLCJwYXJ0bmVyX2FjY2VzcyI6WyJQQVJUTkVSLklELlNIVUJIQU0iXSwidGVu"
-    "YW50X2lkIjoic2h1YmhhbSIsIlJvbGUiOiJBZG1pbiJ9.JBFt15ksk6J8klYTJkelfMYov"
-    "FYCs8AvHVjirrPEtiM",  # pragma: allowlist secret
-    "x-partner-id": "SHUBHAM",
-}
 
 
 def get_random_lock_id() -> str:
@@ -33,11 +25,6 @@ def test_health_check():
 
 
 def test_invalid_route_post_request():
-    # params = {
-    #     "app": "sku_foreca",
-    #     "commit_id": "123",
-    #     "docker_url": "test-docker-url.com",  # incorrect url
-    # }
     response = client.post("/v1/distributed_lock/", headers=valid_headers)
 
     assert response.status_code == 404

@@ -62,9 +62,10 @@ class DistributedLockService(InvoptBaseService):
                 await super().update(lock)
             else:
                 if any(rp.process_id == read_process_id for rp in lock.read_process_list):
-                    raise InvalidInputException(
+                    raise CustomException(
                         f"Process id already present in the lock. "
-                        f"Current lock state: {lock.json()}"
+                        f"Current lock state: {lock.json()}",
+                        status.HTTP_406_NOT_ACCEPTABLE,
                     )
                 lock.read_process_list.append(Process(process_id=read_process_id, timeout=timeout))
                 await super().update(lock)
@@ -93,9 +94,10 @@ class DistributedLockService(InvoptBaseService):
                 await super().update(lock)
             else:
                 if any(wp.process_id == write_process_id for wp in lock.write_process_list):
-                    raise InvalidInputException(
+                    raise CustomException(
                         f"Process id already present in the lock. "
-                        f"Current lock state: {lock.json()}"
+                        f"Current lock state: {lock.json()}",
+                        status.HTTP_406_NOT_ACCEPTABLE,
                     )
                 if lock.is_write_exclusive:
                     raise CustomException(

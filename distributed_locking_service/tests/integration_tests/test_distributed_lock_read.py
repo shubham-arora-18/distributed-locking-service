@@ -58,7 +58,7 @@ def test_invalid_addition_of_already_added_read_process(add_read_process):
         headers=valid_headers,
         params=parameters,
     )
-    assert response.status_code == 400
+    assert response.status_code == 406
     assert "Process id already present in the lock" in str(response.json())
 
 
@@ -172,7 +172,7 @@ def test_valid_add_and_get_timed_out_lock(mock_process, add_read_process):
     rand_process_id = get_random_process_id()
     past_time = datetime.now(timezone.utc) - timedelta(seconds=10)
     # the process below is a timed out process by 8 secs(10-2)
-    expired_process = Process(process_id="test_process_id", lock_acquired_at=past_time, timeout=2)
+    expired_process = Process(process_id=rand_process_id, lock_acquired_at=past_time, timeout=2)
     mock_process.return_value = expired_process
     rand_lock_id = add_read_process["lock_id"]
 
@@ -188,7 +188,7 @@ def test_valid_add_and_get_timed_out_lock(mock_process, add_read_process):
     assert "READ" == response.json()["current_state"]
     assert len(response.json()["read_process_list"]) == 1
     assert not any(
-        rp.get("process_id") == "test_process_id" for rp in response.json().get("read_process_list")
+        rp.get("process_id") == rand_process_id for rp in response.json().get("read_process_list")
     )
 
 
@@ -197,7 +197,7 @@ def test_valid_add_and_get_lock(mock_process, add_read_process):
     rand_process_id = get_random_process_id()
     past_time = datetime.now(timezone.utc) - timedelta(seconds=10)
     # the process below is a live process with 90 secs remaining to live(100-10)
-    live_process = Process(process_id="test_process_id", lock_acquired_at=past_time, timeout=100)
+    live_process = Process(process_id=rand_process_id, lock_acquired_at=past_time, timeout=100)
     mock_process.return_value = live_process
     rand_lock_id = add_read_process["lock_id"]
 
@@ -213,7 +213,7 @@ def test_valid_add_and_get_lock(mock_process, add_read_process):
     assert "READ" == response.json()["current_state"]
     assert len(response.json()["read_process_list"]) == 2
     assert any(
-        rp.get("process_id") == "test_process_id" for rp in response.json().get("read_process_list")
+        rp.get("process_id") == rand_process_id for rp in response.json().get("read_process_list")
     )
 
 
@@ -224,7 +224,7 @@ def test_valid_auto_deletion_of_single_timed_out_process_changes_lock_state_to_f
     rand_process_id = get_random_process_id()
     past_time = datetime.now(timezone.utc) - timedelta(seconds=10)
     # the process below is a timed out process by 8 secs(10-2)
-    expired_process = Process(process_id="test_process_id", lock_acquired_at=past_time, timeout=2)
+    expired_process = Process(process_id=rand_process_id, lock_acquired_at=past_time, timeout=2)
     mock_process.return_value = expired_process
     rand_lock_id = created_exclusive_write_distributed_lock["lock_id"]
 
@@ -237,3 +237,44 @@ def test_valid_auto_deletion_of_single_timed_out_process_changes_lock_state_to_f
     response = client.get(f"/v1/distributed_lock/{rand_lock_id}", headers=valid_headers)
     assert "FREE" == response.json()["current_state"]
     assert len(response.json()["read_process_list"]) == 0
+
+
+# the second put call would overwrite the first expired put call
+def test_exclusive_lock_with_two_put_calls(created_exclusive_write_distributed_lock):
+    rand_lock_id = created_exclusive_write_distributed_lock["lock_id"]
+
+    with mock.patch(
+        "distributed_locking_service.services.distributed_lock.Process"
+    ) as mock_process:
+        rand_process_id = get_random_process_id()
+        past_time = datetime.now(timezone.utc) - timedelta(seconds=10)
+        # the process below is a timed out process by 8 secs(10-2)
+        expired_process = Process(process_id=rand_process_id, lock_acquired_at=past_time, timeout=2)
+        mock_process.return_value = expired_process
+
+        response = client.put(
+            f"/v1/distributed_lock/{rand_lock_id}/read-process/{rand_process_id}",
+            headers=valid_headers,
+            params=parameters,
+        )
+        assert response.status_code == 200
+        assert "READ" == response.json()["current_state"]
+        assert len(response.json()["read_process_list"]) == 1
+        assert any(
+            rp.get("process_id") == rand_process_id
+            for rp in response.json().get("read_process_list")
+        )
+
+    rand_process_id_2 = get_random_process_id()
+    response_2 = client.put(
+        f"/v1/distributed_lock/{rand_lock_id}/write-process/{rand_process_id_2}",
+        headers=valid_headers,
+        params=parameters,
+    )
+    assert response.status_code == 200
+    assert "WRITE" == response_2.json()["current_state"]
+    assert len(response_2.json()["write_process_list"]) == 1
+    assert any(
+        rp.get("process_id") == rand_process_id_2
+        for rp in response_2.json().get("write_process_list")
+    )

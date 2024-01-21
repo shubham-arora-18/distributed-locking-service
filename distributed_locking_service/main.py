@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # exception_handlers
 @app.exception_handler(CustomException)
 async def custom_exception_handler(request, exc):
-    logger.error(f"Error: {str(exc)}")
+    logger.error(f"Error: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=exc.status_code,
         content={"Error message": str(exc)},
@@ -34,7 +34,7 @@ async def custom_exception_handler(request, exc):
 
 @app.exception_handler(exceptions.RequestValidationError)
 async def request_validation_exception_handler(request, exc):
-    logger.error(f"Error: {str(exc)}")
+    logger.error(f"Error: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={"Error message": str(exc)},
@@ -43,7 +43,7 @@ async def request_validation_exception_handler(request, exc):
 
 @app.exception_handler(Exception)
 async def base_exception_handler(request, exc):
-    logger.error(f"Error: {str(exc)}")
+    logger.error(f"Error: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"Error message": str(exc)},

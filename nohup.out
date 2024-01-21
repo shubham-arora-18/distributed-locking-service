@@ -1,0 +1,13 @@
+WARNING: Reusing existing data in [/Users/shubhamarora/.config/gcloud/emulators/datastore].
+Executing: /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/platform/cloud-datastore-emulator/cloud_datastore_emulator start --host=localhost --port=8081 --store_on_disk=False --allow_remote_shutdown --firestore_in_datastore_mode /Users/shubhamarora/.config/gcloud/emulators/datastore
+[datastore] Jan 21, 2024 5:11:56 PM com.google.cloud.datastore.emulator.CloudDatastore$FakeDatastoreAction$9 apply
+[datastore] INFO: Provided --allow_remote_shutdown to start command which is no longer necessary.
+[datastore] Jan 21, 2024 5:11:56 PM com.google.cloud.datastore.emulator.CloudDatastore$StartAction apply
+[datastore] INFO: Running CLOUD_FIRESTORE_IN_DATASTORE_MODE emulator.
+[datastore] Jan 21, 2024 5:11:56 PM com.google.cloud.datastore.emulator.impl.LocalDatastoreFileStub <init>
+[datastore] INFO: Local Datastore initialized:
+[datastore] 	Type: VNext
+[datastore] 	Storage: In-memory
+[datastore] Exiting due to exception: java.net.BindException: Address already in use
+[datastore] 240121 17:11:56.427:I 16 [Thread-1] [com.google.cloud.datastore.emulator.impl.BaseLocalDatastore.cleanupActiveServices:2555] scheduler shutting down.
+[datastore] 240121 17:11:56.436:I 16 [Thread-1] [com.google.cloud.datastore.emulator.impl.BaseLocalDatastore.cleanupActiveServices:2561] scheduler finished shutting down.
