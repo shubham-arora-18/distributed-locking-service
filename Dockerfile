@@ -12,6 +12,8 @@ WORKDIR $APP_HOME
 RUN echo 'Creating image for function : ' $function_name
 COPY distributed_locking_service ./distributed_locking_service
 
+EXPOSE 8080
+
 CMD ["/bin/bash", "-c", "source $VIRTUAL_ENV/bin/activate && uvicorn $app --host 0.0.0.0 --port $port"]
 
-#command to build this docker image:docker build -t [image_name]:[tag] --build-arg base_image=[base_image_name]:[tag] .
+#command to build this docker image:docker buildx build -t [image_name]:[tag] --build-arg base_image=[base_image_name]:[tag] --platform linux/amd64 .
