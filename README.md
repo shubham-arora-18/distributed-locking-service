@@ -5,19 +5,36 @@ After the timeout, the process automatically releases the lock and adjusts the s
 This service has been implemented with Python and Fastapi. GCP's Datastore is used as the backend to store the state of the locks.
 
 
-## Apis
-1. **POST /v1/distributed_lock/{lock_id}(is_exclusive)**: Creates a lock in the db. The lock could be write exclusive(details below) or write shared.
-2. **GET /v1/distributed_lock/{lock_id}**: Gets the lock from the db. To analyse the current state of the lock and the processes involved.
-3. **PUT /v1/distributed_lock/{lock_id}/read-process/{process_id}(timeout_seconds)**: Adds the process to a certain lock as a reader in the list of readers.
-4. **PUT /v1/distributed_lock/{lock_id}/read-process/{process_id}/refresh(timeout_seconds)**: Refreshes the timeout for the already added read process.
-5. **PUT /v1/distributed_lock/{lock_id}/write-process/{process_id}(timeout_seconds)**:Adds the process to a certain lock as a writer in a list of writers.This further has 2 use cases:
-   1. If the write lock is write exclusive, meaning only one process can acquire the write lock at a time.
-   2. If the write lock supports shared writes, meaning multiple processes can acquire the lock to write. Note: This relies on the dev’s discretion to use this only when the underlying processes are modifying separate resources and there is no chance for a race condition on any underlying resources.
-6. **PUT /v1/distributed_lock/{lock_id}/write-process/{process_id}/refresh(timeout_seconds)**: Refreshes the timeout for the already added write process.
-7. **DELETE /v1/distributed_lock/{lock_id}/read-process/{process_id}**: Deletes the read process from the lock and manages the state of the lock accordingly.
-8. **DELETE /v1/distributed_lock/{lock_id}/write-process/{process_id}**: Deletes the write process from the lock and manages the state of the lock accordingly.
+## APIs
 
-To test these apis out, you can simply deploy the service with steps below and access the api docs at [http://localhost:8000/docs](http://localhost:8000/docs).
+1. **POST /v1/distributed_lock/{lock_id}(is_exclusive)**
+   - Creates a lock in the database. The lock can be either write-exclusive (details below) or write-shared.
+
+2. **GET /v1/distributed_lock/{lock_id}**
+   - Retrieves information about the lock from the database to analyze the current state of the lock and the associated processes.
+
+3. **PUT /v1/distributed_lock/{lock_id}/read-process/{process_id}(timeout_seconds)**
+   - Adds a process to a specified lock as a reader in the list of readers.
+
+4. **PUT /v1/distributed_lock/{lock_id}/read-process/{process_id}/refresh(timeout_seconds)**
+   - Refreshes the timeout for the already added read process.
+
+5. **PUT /v1/distributed_lock/{lock_id}/write-process/{process_id}(timeout_seconds)**
+   - Adds the process to a specified lock as a writer in a list of writers. This supports two use cases:
+     1. If the write lock is write-exclusive, meaning only one process can acquire the write lock at a time.
+     2. If the write lock supports shared writes, meaning multiple processes can acquire the lock to write. Note: This relies on the developer's discretion to use this only when the underlying processes are modifying separate resources and there is no chance for a race condition on any underlying resources.
+
+6. **PUT /v1/distributed_lock/{lock_id}/write-process/{process_id}/refresh(timeout_seconds)**
+   - Refreshes the timeout for the already added write process.
+
+7. **DELETE /v1/distributed_lock/{lock_id}/read-process/{process_id}**
+   - Deletes the read process from the lock and manages the state of the lock accordingly.
+
+8. **DELETE /v1/distributed_lock/{lock_id}/write-process/{process_id}**
+   - Deletes the write process from the lock and manages the state of the lock accordingly.
+
+To test these APIs, deploy the service using the provided steps and access the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs).
+
 It should look like this:
 
 ![APIs Screenshot 1](https://github.com/shubham-arora-18/distributed-locking-service/blob/main/api_screenshot_1.png?raw=true)
