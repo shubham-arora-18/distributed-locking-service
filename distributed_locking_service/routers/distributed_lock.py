@@ -74,6 +74,24 @@ async def put_read_process(
 
 
 @router.put(
+    "/distributed_lock/{lock_id}/read-process/{process_id}/refresh",
+    response_model=DistributedLockModel,
+    dependencies=[jwt_bearer_dependency],
+    status_code=200,
+    tags=["distributed-lock"],
+)
+async def refresh_read_process(
+    request: Request,
+    lock_id: str = Path(..., description="Distributed lock id"),
+    process_id: str = Path(..., description="Read process's id to add to distributed lock."),
+    timeout: int = Query(60, description="Distributed lock id"),  # default timeout is 60 secs
+) -> DistributedLockModel:
+    tenant_id = fetch_tenant_id_from_jwt_payload(request)
+    dl_service: DistributedLockService = DistributedLockService(tenant_id)
+    return await dl_service.add_read_process(lock_id, process_id, timeout, True)
+
+
+@router.put(
     "/distributed_lock/{lock_id}/write-process/{process_id}",
     response_model=DistributedLockModel,
     dependencies=[jwt_bearer_dependency],
@@ -89,6 +107,24 @@ async def put_write_process(
     tenant_id = fetch_tenant_id_from_jwt_payload(request)
     dl_service: DistributedLockService = DistributedLockService(tenant_id)
     return await dl_service.add_write_process(lock_id, process_id, timeout)
+
+
+@router.put(
+    "/distributed_lock/{lock_id}/write-process/{process_id}/refresh",
+    response_model=DistributedLockModel,
+    dependencies=[jwt_bearer_dependency],
+    status_code=200,
+    tags=["distributed-lock"],
+)
+async def refresh_write_process(
+    request: Request,
+    lock_id: str = Path(..., description="Distributed lock id"),
+    process_id: str = Path(..., description="Write process's id to add to distributed lock."),
+    timeout: int = Query(60, description="Distributed lock id"),  # default timeout is 60 secs
+) -> DistributedLockModel:
+    tenant_id = fetch_tenant_id_from_jwt_payload(request)
+    dl_service: DistributedLockService = DistributedLockService(tenant_id)
+    return await dl_service.add_write_process(lock_id, process_id, timeout, True)
 
 
 @router.delete(

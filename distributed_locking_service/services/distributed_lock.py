@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
+from typing import Optional
 
 from fastapi import status
 
@@ -40,7 +41,7 @@ class DistributedLockService(InvoptBaseService):
             return await self.refresh_lock(await super().get(lock_id))
 
     async def add_read_process(
-        self, lock_id: str, read_process_id: str, timeout: int
+        self, lock_id: str, read_process_id: str, timeout: int, refresh: bool = False
     ) -> DistributedLockModel:
         db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
         with db_client.transaction():
@@ -61,19 +62,29 @@ class DistributedLockService(InvoptBaseService):
                 lock.read_process_list.append(Process(process_id=read_process_id, timeout=timeout))
                 await super().update(lock)
             else:
-                if any(rp.process_id == read_process_id for rp in lock.read_process_list):
-                    raise CustomException(
-                        f"Process id already present in the lock. "
-                        f"Current lock state: {lock.json()}",
-                        status.HTTP_406_NOT_ACCEPTABLE,
+                try:
+                    matching_process: Optional[Process] = next(
+                        rp for rp in lock.read_process_list if rp.process_id == read_process_id
                     )
+                except StopIteration:
+                    matching_process = None
+
+                if matching_process is not None:
+                    if not refresh:
+                        raise CustomException(
+                            f"Process id {read_process_id} already present in the lock. "
+                            f"Current lock state: {lock.json()}",
+                            status.HTTP_406_NOT_ACCEPTABLE,
+                        )
+                    else:
+                        lock.read_process_list.remove(matching_process)
                 lock.read_process_list.append(Process(process_id=read_process_id, timeout=timeout))
                 await super().update(lock)
 
         return lock
 
     async def add_write_process(
-        self, lock_id: str, write_process_id: str, timeout: int
+        self, lock_id: str, write_process_id: str, timeout: int, refresh: bool = False
     ) -> DistributedLockModel:
         db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
         with db_client.transaction():
@@ -93,12 +104,23 @@ class DistributedLockService(InvoptBaseService):
                 )
                 await super().update(lock)
             else:
-                if any(wp.process_id == write_process_id for wp in lock.write_process_list):
-                    raise CustomException(
-                        f"Process id already present in the lock. "
-                        f"Current lock state: {lock.json()}",
-                        status.HTTP_406_NOT_ACCEPTABLE,
+                try:
+                    matching_process: Optional[Process] = next(
+                        wp for wp in lock.write_process_list if wp.process_id == write_process_id
                     )
+                except StopIteration:
+                    matching_process = None
+
+                if matching_process is not None:
+                    if not refresh:
+                        raise CustomException(
+                            f"Process id {write_process_id} already present in the lock. "
+                            f"Current lock state: {lock.json()}",
+                            status.HTTP_406_NOT_ACCEPTABLE,
+                        )
+                    else:
+                        lock.write_process_list.remove(matching_process)
+
                 if lock.is_write_exclusive:
                     raise CustomException(
                         f"The lock is write exclusive. It can only hold one write process"

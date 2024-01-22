@@ -59,7 +59,20 @@ def test_invalid_addition_of_already_added_read_process(add_read_process):
         params=parameters,
     )
     assert response.status_code == 406
-    assert "Process id already present in the lock" in str(response.json())
+    assert f"Process id {rand_process_id} already present in the lock" in str(response.json())
+
+
+def test_refresh_read_process(add_read_process):
+    rand_lock_id = add_read_process["lock_id"]
+    rand_process_id = add_read_process["read_process_list"][0]["process_id"]
+    response = client.put(
+        f"/v1/distributed_lock/{rand_lock_id}/read-process/{rand_process_id}/refresh",
+        headers=valid_headers,
+        params=parameters,
+    )
+    assert response.status_code == 200
+    assert len(response.json().get("read_process_list")) == 1
+    assert rand_process_id == response.json().get("read_process_list")[0]["process_id"]
 
 
 def test_invalid_addition_of_write_process_to_read_lock(add_read_process):
