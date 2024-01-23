@@ -11,7 +11,7 @@ This service has been implemented with Python and Fastapi. GCP's Datastore is us
 - Initial loading of the page may take some time due to its serverless nature.
 - While the documentation is freely accessible, an API key is required to interact with the API.
 - _To obtain the API key, please reach out to me. Contact details can be found on my github profile._
-- _Stay tuned for an upcoming blog post detailing the creation of this application._
+- _Stay tuned for an upcoming blog post detailing the cloud deployment of this service._
 
 
 ## APIs
