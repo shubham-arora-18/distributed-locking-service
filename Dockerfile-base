@@ -37,4 +37,4 @@ COPY scripts/shared/install_dependencies.sh ./scripts
 RUN source $VIRTUAL_ENV/bin/activate && ./scripts/install_dependencies.sh
 
 
-#command to build this docker image:  docker buildx build -f Dockerfile-base  -t [image_name]:[tag] --platform linux/amd64 .
+#command to build this docker image:  docker buildx build -f Dockerfile-base  -t base_image:1 --platform linux/amd64 .
