@@ -78,6 +78,25 @@ def test_invalid_addition_of_already_added_write_process(add_write_process):
     assert f"Process id {rand_process_id} already present in the lock" in str(response.json())
 
 
+def test_refresh_exclusive_write_process(created_exclusive_write_distributed_lock_ref):
+    rand_lock_id = created_exclusive_write_distributed_lock_ref["lock_id"]
+    rand_process_id = get_random_process_id()
+    client.put(
+        f"/v1/distributed_lock/{rand_lock_id}/write-process/{rand_process_id}",
+        headers=valid_headers,
+        params=parameters,
+    )
+
+    response = client.put(
+        f"/v1/distributed_lock/{rand_lock_id}/write-process/{rand_process_id}/refresh",
+        headers=valid_headers,
+        params=parameters,
+    )
+    assert response.status_code == 200
+    assert len(response.json().get("write_process_list")) == 1
+    assert rand_process_id == response.json().get("write_process_list")[0]["process_id"]
+
+
 def test_refresh_write_process(add_write_process):
     rand_lock_id = add_write_process["lock_id"]
     rand_process_id = add_write_process["write_process_list"][0]["process_id"]

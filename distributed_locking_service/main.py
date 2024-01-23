@@ -66,6 +66,9 @@ for sub_app in app.routes:
             sub_app.app.add_exception_handler(ex, func)  # type: ignore
 
 
+# Endpoint to get the Swagger JSON
+
+
 # import uvicorn
 #
 # os.environ["DATASTORE_EMULATOR_HOST"] = "localhost:8081"

@@ -121,7 +121,7 @@ class DistributedLockService(InvoptBaseService):
                     else:
                         lock.write_process_list.remove(matching_process)
 
-                if lock.is_write_exclusive:
+                if lock.is_write_exclusive and matching_process is None:
                     raise CustomException(
                         f"The lock is write exclusive. It can only hold one write process"
                         f" at a time. Current lock state: {lock.json()}",

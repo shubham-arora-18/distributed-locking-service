@@ -1,0 +1,447 @@
+swagger: '2.0'
+info:
+  title: Distributed Locking Service Proxy
+  description: This is a proxy service that controls rate limiting for the
+    dls(distributed-locking-service) behind it.
+  version: 1.0.0
+host: distributed-locking-service-proxy-s75wuozpva-uc.a.run.app
+schemes:
+  - https
+produces:
+  - application/json
+
+x-google-backend:
+  address: https://dls-s75wuozpva-uc.a.run.app
+  protocol: h2
+
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+
+x-google-management:
+  metrics:
+    - name: api_requests
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      - name: limit-on-api-requests
+        values:
+          STANDARD: 5
+          # this means 5 is the total technical budget can be used to make a call.
+        unit: "1/min/{project}"
+        metric: api_requests
+
+paths:
+  /v1/docs:
+    get:
+      tags:
+        - Swagger doc
+      summary: Swagger Doc
+      operationId: doc_get
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+          # this is the technical cost of this request. Meaning we can make 5/1=5 such requests one minute.
+      responses:
+        '200':
+          description: Successful Response
+  /v1/openapi.json:
+    get:
+      tags:
+        - Swagger open api json
+      summary: Swagger Open Api Json
+      operationId: swagger_open_api_get
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      responses:
+        '200':
+          description: Successful Response
+  /v1/healthcheck:
+    get:
+      tags:
+      - health
+      summary: Healthcheck
+      operationId: healthcheck_healthcheck_get
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: []
+          # api_key for public use should be created in project 1 under org1
+          # api_key for private use should be created in project 2 under org1
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: "#/definitions/HealthcheckResponse"
+  /v1/distributed_lock/{lock_id}:
+    post:
+      tags:
+        - distributed-lock
+      summary: Post Distributed Lock
+      operationId: post_distributed_lock_distributed_lock__lock_id__post
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: is_write_exclusive
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Bool that defines whether lock can be acquired by only a single write process
+      responses:
+        '201':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+    get:
+      tags:
+        - distributed-lock
+      summary: Get Distributed Lock
+      operationId: get_distributed_lock_distributed_lock__lock_id__get
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+
+  /v1/distributed_lock/{lock_id}/read-process/{process_id}:
+    put:
+      tags:
+        - distributed-lock
+      summary: Put Read Process
+      operationId: put_read_process_distributed_lock__lock_id__read_process__process_id__put
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Read process's id to add to distributed lock.
+        - name: timeout
+          in: query
+          required: false
+          type: integer
+          default: 60
+          description: Distributed lock id
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+    delete:
+      tags:
+        - distributed-lock
+      summary: Del Read Process
+      operationId: del_read_process_distributed_lock__lock_id__read_process__process_id__delete
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Id of the read process to be deleted from the distributed lock.
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+
+  /v1/distributed_lock/{lock_id}/read-process/{process_id}/refresh:
+    put:
+      tags:
+        - distributed-lock
+      summary: Refresh Read Process
+      operationId: refresh_read_process_distributed_lock__lock_id__read_process__process_id__refresh_put
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Read process's id to add to distributed lock.
+        - name: timeout
+          in: query
+          required: false
+          type: integer
+          default: 60
+          description: Distributed lock id
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+
+  /v1/distributed_lock/{lock_id}/write-process/{process_id}:
+    put:
+      tags:
+        - distributed-lock
+      summary: Put Write Process
+      operationId: put_write_process_distributed_lock__lock_id__write_process__process_id__put
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Write process's id to add to distributed lock.
+        - name: timeout
+          in: query
+          required: false
+          type: integer
+          default: 60
+          description: Distributed lock id
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+    delete:
+      tags:
+        - distributed-lock
+      summary: Del Write Process
+      operationId: del_write_process_distributed_lock__lock_id__write_process__process_id__delete
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Id of the write process to be deleted from the distributed lock.
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+
+  /v1/distributed_lock/{lock_id}/write-process/{process_id}/refresh:
+    put:
+      tags:
+        - distributed-lock
+      summary: Refresh Write Process
+      operationId: refresh_write_process_distributed_lock__lock_id__write_process__process_id__refresh_put
+      x-google-quota:
+        metricCosts:
+          api_requests: 1
+      security:
+        - api_key: [ ]
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          type: string
+          description: Distributed lock id
+        - name: process_id
+          in: path
+          required: true
+          type: string
+          description: Write process's id to add to distributed lock.
+        - name: timeout
+          in: query
+          required: false
+          type: integer
+          default: 60
+          description: Distributed lock id
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/DistributedLockModel'
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+definitions:
+  DistributedLockModel:
+    properties:
+      id:
+        type: string
+        title: Id
+      created_at:
+        type: string
+        format: date-time
+        title: Created At
+      updated_at:
+        type: string
+        format: date-time
+        title: Updated At
+      lock_id:
+        type: string
+        title: Lock Id
+      read_process_list:
+        items:
+          $ref: '#/definitions/Process'
+        type: array
+        title: Read Process List
+        default: []
+      write_process_list:
+        items:
+          $ref: '#/definitions/Process'
+        type: array
+        title: Write Process List
+        default: []
+      is_write_exclusive:
+        type: boolean
+        title: Is Write Exclusive
+        default: false
+      current_state:
+        type: string
+        enum:
+          - FREE
+          - READ
+          - WRITE
+        default: FREE
+
+  HTTPValidationError:
+    properties:
+      detail:
+        items:
+          $ref: '#/definitions/ValidationError'
+        type: array
+        title: Detail
+
+  HealthcheckResponse:
+    properties:
+      message:
+        type: string
+        title: Message
+      service_version:
+        type: string
+        title: Service Version
+      commit_id:
+        type: string
+        title: Commit Id
+      time:
+        type: string
+        format: date-time
+        title: Time
+
+  LockState:
+    type: string
+    enum:
+      - READ
+      - WRITE
+      - FREE
+
+  Process:
+    properties:
+      process_id:
+        type: string
+        title: Process Id
+      lock_acquired_at:
+        type: string
+        format: date-time
+        title: Lock Acquired At
+      timeout:
+        type: integer
+        title: Timeout
+
+  ValidationError:
+    properties:
+      loc:
+        items:
+          type: string
+        type: array
+        title: Location
+      msg:
+        type: string
+        title: Message
+      type:
+        type: string
+        title: Error Type

@@ -24,3 +24,16 @@ def healthcheck() -> HealthcheckResponse:
         commit_id=os.environ.get("COMMIT_ID", "No commit id found!"),
         time=datetime.now(timezone.utc),
     )
+
+
+@router.get("/documentation", response_model=HealthcheckResponse, tags=["health"])
+def documentation() -> HealthcheckResponse:
+    message = "healthy"
+
+    logger.info(message)
+    return HealthcheckResponse(
+        message=message,
+        service_version=__version__,
+        commit_id=os.environ.get("COMMIT_ID", "No commit id found!"),
+        time=datetime.now(timezone.utc),
+    )
