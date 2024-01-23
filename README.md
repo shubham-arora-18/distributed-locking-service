@@ -4,13 +4,15 @@ Different processes can attain shared read and shared write locks. Every process
 After the timeout, the process automatically releases the lock and adjusts the state of the lock accordingly.
 This service has been implemented with Python and Fastapi. GCP's Datastore is used as the backend to store the state of the locks.
 
-## Access the live application
-- **This Service is LIVE**. It has been deployed on the Internet.
-- It is serverless in nature leverages Google Cloud Run for the same.
-- You can access the documentation here: [https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs](https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs)
-- While the documentation is free to access for anyone, in order to access the api, you would need an API key.
-- _Please contact me for the api key. You can find the contact details on my github profile._
-- _Blog on how I created this is coming soon._
+## Live Application Access
+- **Service Status: LIVE** – The application has been deployed on the internet and is currently accessible.
+- The service is implemented in a serverless architecture, utilizing Google Cloud Run and Google Datastore.
+- Documentation is available at [https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs](https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs).
+- Initial loading of the page may take some time due to its serverless nature.
+- While the documentation is freely accessible, an API key is required to interact with the API.
+- _To obtain the API key, please reach out to me. Contact details can be found on my github profile._
+- _Stay tuned for an upcoming blog post detailing the creation of this application._
+
 
 ## APIs
 
