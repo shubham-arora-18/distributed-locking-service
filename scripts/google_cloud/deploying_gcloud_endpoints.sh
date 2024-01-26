@@ -19,10 +19,10 @@ gcloud endpoints services deploy distributed-locking-service-proxy.yaml \
 #chmod +x scripts/google_cloud/gcloud_build_image
 
 ./scripts/google_cloud/gcloud_build_image.sh -s distributed-locking-service-proxy-s75wuozpva-uc.a.run.app \
-    -c 2024-01-23r6 -p distributed-locking-service
+    -c 2024-01-26r4 -p distributed-locking-service
 
 gcloud run deploy distributed-locking-service-proxy \
-  --image="gcr.io/distributed-locking-service/endpoints-runtime-serverless:2.46.0-distributed-locking-service-proxy-s75wuozpva-uc.a.run.app-2024-01-23r6" \
+  --image="gcr.io/distributed-locking-service/endpoints-runtime-serverless:2.46.0-distributed-locking-service-proxy-s75wuozpva-uc.a.run.app-2024-01-26r4" \
   --allow-unauthenticated \
   --platform managed \
   --project=distributed-locking-service \

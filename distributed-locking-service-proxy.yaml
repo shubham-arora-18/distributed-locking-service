@@ -19,6 +19,18 @@ securityDefinitions:
     type: "apiKey"
     name: "key"
     in: "query"
+  # gcp does not currently support quotas based on auth_tokens, it only supports is on the basis of api keys.
+  # Here's the open issue:  https://github.com/GoogleCloudPlatform/esp-v2/issues/407
+  custom_google_service_account:
+    type: "oauth2"
+    authorizationUrl: ""
+    flow: "implicit"
+    x-google-issuer: "jwt-sa@distributed-locking-service.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/jwt-sa@distributed-locking-service.iam.gserviceaccount.com"
+    x-google-audiences: "distributed-locking-service-proxy-s75wuozpva-uc.a.run.app"
+    x-google-jwt-locations:
+      - header: "Authorization"
+        value_prefix: "Bearer "
 
 x-google-management:
   metrics:
@@ -70,9 +82,7 @@ paths:
         metricCosts:
           api_requests: 1
       security:
-        - api_key: []
-          # api_key for public use should be created in project 1 under org1
-          # api_key for private use should be created in project 2 under org1
+        - custom_google_service_account: [ ]
       responses:
         '200':
           description: Successful Response
@@ -120,6 +130,8 @@ paths:
           api_requests: 1
       security:
         - api_key: [ ]
+        # api_key for public use should be created in project 1 under org1
+        # api_key for private use should be created in project 2 under org1
       parameters:
         - name: lock_id
           in: path
