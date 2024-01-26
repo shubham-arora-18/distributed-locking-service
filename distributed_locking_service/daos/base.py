@@ -16,13 +16,13 @@ logger = logging.getLogger()
 
 
 class InvoptBaseDAO(Generic[model_T]):
-    def __init__(self, kind: str, __model_return_type__: Type[model_T], tenant_id: str):
-        self.tenant_id = tenant_id
+    def __init__(self, kind: str, __model_return_type__: Type[model_T], user_id: str):
+        self.user_id = user_id
         self.__kind__ = kind
         self.__model_return_type__ = __model_return_type__
 
     async def create(self, datastore_entity: model_T) -> model_T:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.user_id)
         key = db_client.key(self.__kind__, datastore_entity.id)
         entity = datastore.Entity(key=key)
         entity_dict = datastore_entity.dict()
@@ -31,7 +31,7 @@ class InvoptBaseDAO(Generic[model_T]):
         return datastore_entity
 
     async def get(self, id: str) -> model_T:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.user_id)
         key = db_client.key(self.__kind__, str(id))
         entity = db_client.get(key)
         if entity is None:
@@ -50,7 +50,7 @@ class InvoptBaseDAO(Generic[model_T]):
         limit: Optional[int] = None,
         order_property: Optional[str] = None,
     ) -> list[model_T]:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.user_id)
         query = db_client.query(kind=self.__kind__)
         if order_property:
             query.order = [order_property]

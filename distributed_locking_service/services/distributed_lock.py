@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 
 
 class DistributedLockService(InvoptBaseService):
-    def __init__(self, tenant_id):
-        super().__init__(DistributedLockDAO(tenant_id), DistributedLockModel)
+    def __init__(self, user_id):
+        super().__init__(DistributedLockDAO(user_id), DistributedLockModel)
 
     async def create_lock(self, lock_id: str, is_write_exclusive: bool) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             try:
                 await super().get(lock_id)
@@ -36,14 +36,14 @@ class DistributedLockService(InvoptBaseService):
                 return await super().create(lock_id=lock_id, is_write_exclusive=is_write_exclusive)
 
     async def get(self, lock_id: str) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             return await self.refresh_lock(await super().get(lock_id))
 
     async def add_read_process(
         self, lock_id: str, read_process_id: str, timeout: int, refresh: bool = False
     ) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             lock: DistributedLockModel = await super().get(
                 lock_id
@@ -86,7 +86,7 @@ class DistributedLockService(InvoptBaseService):
     async def add_write_process(
         self, lock_id: str, write_process_id: str, timeout: int, refresh: bool = False
     ) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             lock: DistributedLockModel = await super().get(lock_id)
             lock = await self.refresh_lock(lock)
@@ -135,7 +135,7 @@ class DistributedLockService(InvoptBaseService):
         return lock
 
     async def del_read_process(self, lock_id: str, read_process_id: str) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             lock: DistributedLockModel = await super().get(lock_id)
             lock = await self.refresh_lock(lock)
@@ -165,7 +165,7 @@ class DistributedLockService(InvoptBaseService):
         return lock
 
     async def del_write_process(self, lock_id: str, write_process_id: str) -> DistributedLockModel:
-        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.tenant_id)
+        db_client = await TenantDatastoreClient.get_datastore_client(self.dao_obj.user_id)
         with db_client.transaction():
             lock: DistributedLockModel = await super().get(lock_id)
             lock = await self.refresh_lock(lock)

@@ -1,5 +1,5 @@
 gcloud run deploy dls \
---image=asia-south1-docker.pkg.dev/distributed-locking-service/docker-repo/docker-image:version4 \
+--image=asia-south1-docker.pkg.dev/distributed-locking-service/docker-repo/docker-image:version5 \
 --no-allow-unauthenticated \
 --port=8080 \
 --region=us-central1 \

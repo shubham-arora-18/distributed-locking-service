@@ -7,8 +7,8 @@ from distributed_locking_service.models.distributed_lock import DistributedLockM
 
 
 class DistributedLockDAO(InvoptBaseDAO):
-    def __init__(self, tenant_id: str):
-        super().__init__("distributed_lock", DistributedLockModel, tenant_id)
+    def __init__(self, user_id: str):
+        super().__init__("distributed_lock", DistributedLockModel, user_id)
 
     async def get(self, lock_id: str) -> DistributedLockModel:
         filters: list[tuple[Any, ...]] = [
