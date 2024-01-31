@@ -7,7 +7,7 @@ This service has been implemented with Python and Fastapi. GCP's Datastore is us
 ## Live Application Access
 - **Service Status: LIVE** – The application has been deployed on the internet and is currently accessible.
 - The service is implemented in a serverless architecture, utilizing Google Cloud Run and Google Datastore.
-- Documentation is available at [https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs](https://distributed-locking-service-proxy-s75wuozpva-uc.a.run.app/v1/docs).
+- Documentation is available at [https://cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app/v1/docs](https://cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app/v1/docs).
 - The first api call to the server may take some time due to its serverless nature. Consecutive calls will be very fast.
 - While the documentation api is freely accessible, an API key is required to interact with the other apis.
 - _To obtain the API key, please reach out to me. Contact details can be found on my github profile._
