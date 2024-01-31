@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-gcloud auth configure-docker asia-south1-docker.pkg.dev
-gcloud artifacts repositories create docker-repo --repository-format=docker --location=asia-south1
-docker tag [image_name]:[tag] asia-south1-docker.pkg.dev/distributed-locking-service/docker-repo/docker-image:version1
-docker push asia-south1-docker.pkg.dev/distributed-locking-service/docker-repo/docker-image:version1
+gcloud auth configure-docker us-central1-docker.pkg.dev
+gcloud artifacts repositories create distributed-locking-service --repository-format=docker --location=us-central1
+docker tag [image_name]:[tag] us-central1-docker.pkg.dev/prefab-sky-412817/distributed-locking-service/docker-image:version1
+docker push us-central1-docker.pkg.dev/prefab-sky-412817/distributed-locking-service/docker-image:version1

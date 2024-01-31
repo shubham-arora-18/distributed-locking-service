@@ -1,7 +1,7 @@
-gcloud run deploy dls \
---image=asia-south1-docker.pkg.dev/distributed-locking-service/docker-repo/docker-image:version6 \
+gcloud run deploy backend-web-application \
+--image=us-central1-docker.pkg.dev/prefab-sky-412817/distributed-locking-service/docker-image:version1 \
 --no-allow-unauthenticated \
 --port=8080 \
 --region=us-central1 \
 --platform managed \
---project=distributed-locking-service
+--project=prefab-sky-412817

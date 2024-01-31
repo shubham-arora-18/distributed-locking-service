@@ -2,16 +2,16 @@ swagger: '2.0'
 info:
   title: Distributed Locking Service Proxy
   description: This is a proxy service that controls rate limiting for the
-    dls(distributed-locking-service) behind it.
+    distributed-locking-service behind it.
   version: 1.0.0
-host: distributed-locking-service-proxy-s75wuozpva-uc.a.run.app
+host: cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app
 schemes:
   - https
 produces:
   - application/json
 
 x-google-backend:
-  address: https://dls-s75wuozpva-uc.a.run.app
+  address: https://backend-web-application-z4ndkzhdma-uc.a.run.app
   protocol: h2
 
 securityDefinitions:
@@ -25,9 +25,9 @@ securityDefinitions:
     type: "oauth2"
     authorizationUrl: ""
     flow: "implicit"
-    x-google-issuer: "jwt-sa@distributed-locking-service.iam.gserviceaccount.com"
-    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/jwt-sa@distributed-locking-service.iam.gserviceaccount.com"
-    x-google-audiences: "distributed-locking-service-proxy-s75wuozpva-uc.a.run.app"
+    x-google-issuer: "jwt-sa@prefab-sky-412817.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/jwt-sa@prefab-sky-412817.iam.gserviceaccount.com"
+    x-google-audiences: "cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app"
     x-google-jwt-locations:
       - header: "Authorization"
         value_prefix: "Bearer "

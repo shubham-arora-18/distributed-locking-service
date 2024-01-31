@@ -7,9 +7,9 @@ logger = logging.getLogger()
 
 
 sa_keyfile = "/Users/shubhamarora/Downloads/distributed-locking-jwt.json"
-sa_email = "jwt-sa@distributed-locking-service.iam.gserviceaccount.com"
+sa_email = "jwt-sa@prefab-sky-412817.iam.gserviceaccount.com"
 expire = 3000  # expire after secs
-aud = "distributed-locking-service-proxy-s75wuozpva-uc.a.run.app"
+aud = "cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app"
 
 jwt = generate_jwt(sa_keyfile, sa_email, expire, aud)
 
