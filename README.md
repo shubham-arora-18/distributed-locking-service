@@ -6,7 +6,7 @@ This service has been implemented with Python and Fastapi. GCP's Datastore is us
 
 ## Live Application Access
 - **Service Status: LIVE** – The application has been deployed on the internet and is currently accessible.
-- **Cloud Deployment Documentation** : [Serverless, Stateful and Secured Backend Service deployed on internet for less than $1/Month](https://cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app/v1/docs)
+- **Cloud Deployment Documentation** : [Serverless, Stateful and Secured Backend Service deployed on internet for less than $1/Month](https://medium.com/@shubham.arora.player/deploy-a-secure-serverless-backend-web-application-with-cloud-run-cloud-endpoints-and-e9d63b022465)
 - The service is implemented in a serverless architecture, utilizing Google Cloud Run and Google Datastore.
 - Documentation is available at [https://cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app/v1/docs](https://cloud-endpoint-proxy-application-z4ndkzhdma-uc.a.run.app/v1/docs).
 - The first api call to the server may take some time due to its serverless nature. Consecutive calls will be very fast.
